@@ -1,41 +1,79 @@
 package com.example.canlender_openpro;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.TextView;
+import android.util.Log;
+
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+
+import com.example.canlender_openpro.Fragment.FragFriend;
+import com.example.canlender_openpro.Fragment.FragHome;
+import com.example.canlender_openpro.Fragment.FragHotel;
+import com.example.canlender_openpro.Fragment.FragStar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView dateTextView;
-    private Handler handler;
-    private SimpleDateFormat dateFormat;
+    //바텀 네비게이션
+    BottomNavigationView bottomNavigationView;
+
+    private String TAG = "메인";
+
+    // 프래그먼트 변수
+    Fragment fragment_home;
+    Fragment fragment_star;
+    Fragment fragment_group;
+    Fragment fragment_hotel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dateTextView = findViewById(R.id.textView2);
-        handler = new Handler(Looper.getMainLooper());
-        dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault());
+        //프래그먼트 생성
+        fragment_home=new FragHome();
+        fragment_star=new FragStar();
+        fragment_group=new FragFriend();
+        fragment_hotel=new FragHotel();
 
-        // 매 초마다 현재 날짜를 업데이트
-        handler.postDelayed(new Runnable() {
+        //초기 플래그먼트 설정
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_home).commitAllowingStateLoss();
+
+        //바텀 네비게이션
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        //리스터 등록
+        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
-            public void run() {
-                updateCurrentDate();
-                handler.postDelayed(this, 1000); // 1초마다 업데이트
-            }
-        }, 0);
-    }
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Log.i(TAG, "바텀 네비게이션 클릭");
 
-    private void updateCurrentDate() {
-        String currentDate = dateFormat.format(new Date());
-        dateTextView.setText("현재 날짜: " + currentDate);
+                int itemId = item.getItemId();
+                if (itemId == R.id.home) {
+                    Log.i(TAG, "home 들어옴");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_home).commitAllowingStateLoss();
+                    return true;
+                } else if (itemId == R.id.star) {
+                    Log.i(TAG, "star 들어옴");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_star).commitAllowingStateLoss();
+                    return true;
+                } else if (itemId == R.id.group) {
+                    Log.i(TAG, "group 들어옴");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_group).commitAllowingStateLoss();
+                    return true;
+                } else if (itemId == R.id.hotel) {
+                    Log.i(TAG, "hotel 들어옴");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_hotel).commitAllowingStateLoss();
+                    return true;
+                }
+                return true;
+            }
+        });
     }
 }
