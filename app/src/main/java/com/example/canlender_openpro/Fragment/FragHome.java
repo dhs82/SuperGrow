@@ -1,5 +1,6 @@
 package com.example.canlender_openpro.Fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -7,21 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.canlender_openpro.R;
-
-import android.os.AsyncTask;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +27,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class FragHome extends Fragment {
 
@@ -40,7 +37,6 @@ public class FragHome extends Fragment {
     private Handler handler;
     private SimpleDateFormat dateFormat;
     private View view;
-
     private String TAG = "프래그먼트";
 
     @Nullable
@@ -50,7 +46,7 @@ public class FragHome extends Fragment {
         view = inflater.inflate(R.layout.frag_home, container, false);
 
         // 날짜 초기화
-        dateTextView = view.findViewById(R.id.textView2);
+        dateTextView = view.findViewById(R.id.textView);
         handler = new Handler(Looper.getMainLooper());
         dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault());
 
@@ -63,6 +59,10 @@ public class FragHome extends Fragment {
             }
         }, 0);
 
+        // 날씨 정보 가져오기
+        WeatherDataDownloader downloader = new WeatherDataDownloader();
+        downloader.execute();
+
         return view;
     }
 
@@ -70,26 +70,11 @@ public class FragHome extends Fragment {
         String currentDate = dateFormat.format(new Date());
         dateTextView.setText("현재 날짜: " + currentDate);
     }
-}
-class MainActivity extends AppCompatActivity {
-    /*private TextView weatherTextView;*/ // 날씨 정보를 표시할 TextView
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        // XML에서 TextView에 대한 참조 얻기
-        /*weatherTextView = findViewById(R.id.weathernow);*/
 
-        WeatherDataDownloader downloader = new WeatherDataDownloader();
-        downloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+    private class WeatherDataDownloader extends AsyncTask<Void, Void, String> {
 
-    public class WeatherDataDownloader extends AsyncTask<Void, Void, String> {
-        /*private TextView weatherTextView; // 날씨 정보를 표시할 TextView
-        public WeatherDataDownloader(TextView weatherTextView) {
-            this.weatherTextView = weatherTextView;
-        }*/
-        public String doInBackground(Void... voids) {
+        @Override
+        protected String doInBackground(Void... voids) {
             try {
                 URL url = new URL("https://api.openweathermap.org/data/2.5/weather?lat=36.625627&lon=127.454416&appid=545f5e5c990faad311e871f4fb035837");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -114,56 +99,31 @@ class MainActivity extends AppCompatActivity {
                 return null;
             }
         }
+
         @Override
         protected void onPostExecute(String jsonData) {
             if (jsonData != null) {
                 OpenWeather openWeather = new OpenWeather();
-                String mainWeather = openWeather.MainWeather(jsonData);
-                ImageView weatherImage = findViewById(R.id.weatherImage);
+                final String mainWeather = openWeather.MainWeather(jsonData);
 
-                // 여기에서 mainWeather를 사용하여 UI를 업데이트하거나 필요한 작업을 수행합니다.
-                /*if (weatherTextView != null) {
-                    ImageView weatherImage = findViewById(R.id.weatherImage);*/
-
-                if("clouds".equalsIgnoreCase(mainWeather)){
-                    weatherImage.setImageResource(R.drawable.opensw_cloud);
-                    weatherImage.setVisibility(View.VISIBLE);
-                }
-                else if("clear".equalsIgnoreCase(mainWeather)){
-                    weatherImage.setImageResource(R.drawable.opensw_clear);
-                    weatherImage.setVisibility(View.VISIBLE);
-                }
-                else if("rain".equalsIgnoreCase(mainWeather)){
-                    weatherImage.setImageResource(R.drawable.opensw_rain);
-                    weatherImage.setVisibility(View.VISIBLE);
-                }
-                else if("snow".equalsIgnoreCase(mainWeather)){
-                    weatherImage.setImageResource(R.drawable.opensw_snow);
-                    weatherImage.setVisibility(View.VISIBLE);
-                }
-                else if("mist".equalsIgnoreCase(mainWeather)||"drizzle".equalsIgnoreCase(mainWeather)){
-                    weatherImage.setImageResource(R.drawable.opensw_mist);
-                    weatherImage.setVisibility(View.VISIBLE);
-                }
-
-                /*weatherTextView.setText("현재 날씨: " + mainWeather);*/
-
+                // UI 업데이트를 메인 스레드에서 수행
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateWeatherImage(mainWeather);
+                    }
+                });
             } else {
-                // 데이터 다운로드에 실패한 경우 처리할 내용을 추가합니다.
-                Toast.makeText(MainActivity.this, "날씨 정보를 가져오지 못했습니다.", Toast.LENGTH_LONG).show();
-                /*if (weatherTextView != null) {
-                    weatherTextView.setText("날씨 정보를 가져오지 못했습니다.");*/
+                // 데이터 다운로드에 실패한 경우 처리
+                Toast.makeText(getActivity(), "날씨 정보를 가져오지 못했습니다.", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-
-
-    class OpenWeather {
-
+    private class OpenWeather {
         String MainWeather(String jsonData) {
             try {
-                if(jsonData==null){
+                if (jsonData == null) {
                     return "No Data available";
                 }
 
@@ -177,17 +137,32 @@ class MainActivity extends AppCompatActivity {
                 JSONObject weatherObject = weatherArray.getJSONObject(0);
 
                 // "main" 속성 값을 가져옴
-                String mainWeather = weatherObject.getString("main");
-
-                return mainWeather;
+                return weatherObject.getString("main");
             } catch (JSONException e) {
                 e.printStackTrace();
                 return "Error while parsing JSON data";
             }
         }
-
-
     }
 
+    private void updateWeatherImage(String mainWeather) {
+        ImageView weatherImage = view.findViewById(R.id.weatherImage);
 
+        if ("clouds".equalsIgnoreCase(mainWeather)) {
+            weatherImage.setImageResource(R.drawable.opensw_cloud);
+            weatherImage.setVisibility(View.VISIBLE);
+        } else if ("clear".equalsIgnoreCase(mainWeather)) {
+            weatherImage.setImageResource(R.drawable.opensw_clear);
+            weatherImage.setVisibility(View.VISIBLE);
+        } else if ("rain".equalsIgnoreCase(mainWeather)) {
+            weatherImage.setImageResource(R.drawable.opensw_rain);
+            weatherImage.setVisibility(View.VISIBLE);
+        } else if ("snow".equalsIgnoreCase(mainWeather)) {
+            weatherImage.setImageResource(R.drawable.opensw_snow);
+            weatherImage.setVisibility(View.VISIBLE);
+        } else if ("mist".equalsIgnoreCase(mainWeather) || "drizzle".equalsIgnoreCase(mainWeather)) {
+            weatherImage.setImageResource(R.drawable.opensw_mist);
+            weatherImage.setVisibility(View.VISIBLE);
+        }
+    }
 }
