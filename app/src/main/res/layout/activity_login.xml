@@ -5,29 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#99C8F37D"
-    tools:context=".LoginActivity">
+    tools:context=".LoginRequest">
 
     <Button
-        android:id="@+id/btn_Register"
+        android:id="@+id/join_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="회원가입"
         app:backgroundTint="#5EDD8D"
-        app:layout_constraintEnd_toEndOf="@+id/btn_login"
+        app:layout_constraintEnd_toEndOf="@+id/login_button"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/btn_login"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+        app:layout_constraintStart_toStartOf="@+id/login_button"
+        app:layout_constraintTop_toBottomOf="@+id/login_button" />
 
     <EditText
-        android:id="@+id/et_ID"
+        android:id="@+id/login_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="288dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
-        android:hint="아이디"
+        android:hint="이메일"
         android:inputType="text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/et_PASS"
+        android:id="@+id/login_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -46,21 +46,21 @@
         android:hint="비밀번호"
         android:inputType="text"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/et_ID"
-        app:layout_constraintStart_toStartOf="@+id/et_ID"
-        app:layout_constraintTop_toBottomOf="@+id/et_ID" />
+        app:layout_constraintEnd_toEndOf="@+id/login_email"
+        app:layout_constraintStart_toStartOf="@+id/login_email"
+        app:layout_constraintTop_toBottomOf="@+id/login_email" />
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/login_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:text="로그인"
         app:backgroundTint="#5EDD8D"
-        app:layout_constraintEnd_toEndOf="@+id/et_PASS"
+        app:layout_constraintEnd_toEndOf="@+id/login_password"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_PASS"
-        app:layout_constraintTop_toBottomOf="@+id/et_PASS" />
+        app:layout_constraintStart_toStartOf="@+id/login_password"
+        app:layout_constraintTop_toBottomOf="@+id/login_password" />
 
     <TextView
         android:id="@+id/textView"
@@ -73,7 +73,7 @@
 
         android:textColor="#276A2A"
         android:textSize="28sp"
-        app:layout_constraintBottom_toTopOf="@+id/et_ID"
+        app:layout_constraintBottom_toTopOf="@+id/login_email"
         app:layout_constraintEnd_toStartOf="@+id/imageView2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -87,7 +87,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="60dp"
         android:layout_marginBottom="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/et_ID"
+        app:layout_constraintBottom_toTopOf="@+id/login_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent"
