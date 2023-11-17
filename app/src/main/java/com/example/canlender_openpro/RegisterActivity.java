@@ -1,8 +1,8 @@
 package com.example.canlender_openpro;
 
-//회원가입 처리
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,31 +21,30 @@ import org.json.JSONObject;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText join_email, join_password, join_name, join_pwck;
-    private Button join_button, check_button;
+    private Button join_button, check_button,delete;
     private AlertDialog dialog;
     private boolean validate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_join );
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_join);
 
-        //아이디값 찾아주기
-        join_email = findViewById( R.id.join_email );
-        join_password = findViewById( R.id.join_password );
-        join_name = findViewById( R.id.join_name );
+        // 아이디값 찾아주기
+        join_email = findViewById(R.id.join_email);
+        join_password = findViewById(R.id.join_password);
+        join_name = findViewById(R.id.join_name);
         join_pwck = findViewById(R.id.join_pwck);
 
-
-        //아이디 중복 체크
         check_button = findViewById(R.id.check_button);
         check_button.setOnClickListener(new View.OnClickListener() {
 
+            //이메일 중복 확인 코드
             @Override
             public void onClick(View view) {
                 String UserEmail = join_email.getText().toString();
                 if (validate) {
-                    return; //검증 완료
+                    return; // 검증 완료
                 }
 
                 if (UserEmail.equals("")) {
@@ -59,7 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
-
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");
 
@@ -67,17 +65,24 @@ public class RegisterActivity extends AppCompatActivity {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
                                 dialog = builder.setMessage("사용할 수 있는 아이디입니다.").setPositiveButton("확인", null).create();
                                 dialog.show();
-                                join_email.setEnabled(false); //아이디값 고정
-                                validate = true; //검증 완료
+                                join_email.setEnabled(false); // 아이디값 고정
+                                validate = true; // 검증 완료
                                 check_button.setBackgroundColor(getResources().getColor(R.color.colorGray));
-                            }
-                            else {
+                            } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
                                 dialog = builder.setMessage("이미 존재하는 아이디입니다.").setNegativeButton("확인", null).create();
                                 dialog.show();
                             }
+                            Log.i("tagconvertstr", "[" + response + "]"); // 로그 출력 추가
+                            Log.d("tagconvertstr", "Debug: [" + response + "]"); // 디버그 로그 추가
+                            Log.e("tagconvertstr", "Error: [" + response + "]"); // 에러 로그 추가
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            // 추가: 예외 발생 시 로그에 출력
+                            Log.e("RegisterActivity", "JSONException: " + e.getMessage());
+                            // 추가: 예외 발생 시 Toast 메시지로 알림
+                            Toast.makeText(RegisterActivity.this, "JSON 예외 발생: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 };
@@ -87,11 +92,18 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        delete= findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 현재 화면 종료 (뒤로 가기)
+                finish();
+            }
+        });
 
-
-        //회원가입 버튼 클릭 시 수행
-        join_button = findViewById( R.id.join_button );
-        join_button.setOnClickListener( new View.OnClickListener() {
+        // 회원가입 버튼 클릭 시 수행
+        join_button = findViewById(R.id.join_button);
+        join_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String UserEmail = join_email.getText().toString();
@@ -99,8 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
                 final String UserName = join_name.getText().toString();
                 final String PassCk = join_pwck.getText().toString();
 
-
-                //아이디 중복체크 했는지 확인
+                // 아이디 중복체크 했는지 확인
                 if (!validate) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
                     dialog = builder.setMessage("중복된 아이디가 있는지 확인하세요.").setNegativeButton("확인", null).create();
@@ -108,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                //한 칸이라도 입력 안했을 경우
+                // 한 칸이라도 입력 안했을 경우
                 if (UserEmail.equals("") || UserPwd.equals("") || UserName.equals("")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
                     dialog = builder.setMessage("모두 입력해주세요.").setNegativeButton("확인", null).create();
@@ -129,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (success) {
 
                                     Toast.makeText(getApplicationContext(), String.format("%s님 가입을 환영합니다.", UserName), Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(RegisterActivity.this, LoginRequest.class);
+                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                     startActivity(intent);
 
                                     //회원가입 실패시
@@ -151,10 +162,10 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 };
 
-                //서버로 Volley를 이용해서 요청
-                RegisterRequest registerRequest = new RegisterRequest( UserEmail, UserPwd, UserName, responseListener);
-                RequestQueue queue = Volley.newRequestQueue( RegisterActivity.this );
-                queue.add( registerRequest );
+                // 서버로 Volley를 이용해서 요청
+                RegisterRequest registerRequest = new RegisterRequest(UserEmail, UserPwd, UserName, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
+                queue.add(registerRequest);
             }
         });
     }

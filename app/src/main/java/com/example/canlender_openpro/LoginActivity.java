@@ -19,7 +19,7 @@ import org.json.JSONObject;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText login_email, login_password;
-    private Button login_button, join_button;
+    private Button login_button, join_button,Not_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,15 @@ public class LoginActivity extends AppCompatActivity {
 
         join_button = findViewById( R.id.join_button );
         join_button.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( LoginActivity.this, RegisterActivity.class );
+                startActivity( intent );
+            }
+        });
+
+        Not_login = findViewById( R.id.Not_login);
+        Not_login.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent( LoginActivity.this, MainActivity.class );
