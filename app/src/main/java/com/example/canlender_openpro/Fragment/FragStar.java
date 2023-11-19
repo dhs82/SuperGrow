@@ -29,3 +29,31 @@ public class FragStar extends Fragment {
     }
 
 }
+//달력
+import android.os.Bundle;
+        import android.widget.CalendarView;
+        import android.widget.Toast;
+
+        import androidx.annotation.NonNull;
+        import androidx.appcompat.app.AppCompatActivity;
+
+public class FragStar extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.frag_star);
+
+        CalendarView calendarView = findViewById(R.id.calendarView);
+
+        // 달력에서 날짜를 선택했을 때 이벤트 처리
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                // 선택된 날짜에 대한 처리를 여기에 추가
+                String selectedDate = year + "-" + (month + 1) + "-" + dayOfMonth;
+                Toast.makeText(FragStar.this, "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
