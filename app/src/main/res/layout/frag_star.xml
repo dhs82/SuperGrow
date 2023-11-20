@@ -7,8 +7,8 @@
     android:paddingLeft="16dp"
     android:paddingTop="16dp"
     android:paddingRight="16dp"
-    android:paddingBottom="16dp"
-    tools:context=".MainActivity">>
+    android:paddingBottom="16dp">
+    <!--tools:context=".FragStar"(위에 선언부에 있었음 추후 사용될 여지 있음)-->
 
     <TextView
         android:layout_width="wrap_content"
