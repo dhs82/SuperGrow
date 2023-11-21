@@ -1,24 +1,39 @@
 package com.example.canlender_openpro.Fragment;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.canlender_openpro.R;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
 
 public class FragStar extends Fragment {
 
     private View view;
     private String TAG = "프래그먼트";
+    private String fname = null;
+    private String str = null;
+    private CalendarView calendarView;
+    private Button cha_Btn, del_Btn, save_Btn;
+    private TextView diaryTextView, textView2, textView3;
+    private EditText contextEditText;
+    private String userID; // 추가된 부분
 
     @Nullable
     @Override
@@ -26,18 +41,141 @@ public class FragStar extends Fragment {
         Log.i(TAG, "onCreateView");
         view = inflater.inflate(R.layout.frag_star, container, false);
 
-        CalendarView calendarView = view.findViewById(R.id.calendarView);
+        calendarView = view.findViewById(R.id.calendarView);
+        diaryTextView = view.findViewById(R.id.diaryTextView);
+        save_Btn = view.findViewById(R.id.save_Btn);
+        del_Btn = view.findViewById(R.id.del_Btn);
+        cha_Btn = view.findViewById(R.id.cha_Btn);
+        textView2 = view.findViewById(R.id.textView2);
+        textView3 = view.findViewById(R.id.textView3);
+        contextEditText = view.findViewById(R.id.contextEditText);
 
-        // 달력에서 날짜를 선택했을 때 이벤트 처리
+        //로그인 및 회원가입 엑티비티에서 이름을 받아옴
+        Intent intent = requireActivity().getIntent();
+        String name = intent.getStringExtra("UserName");
+        final String userID = intent.getStringExtra("UserID");
+        textView3.setText(name + "님의 달력 일기장");
+
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                // 선택된 날짜에 대한 처리를 여기에 추가
-                String selectedDate = year + "-" + (month + 1) + "-" + dayOfMonth;
-                Toast.makeText(requireContext(), "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
+                diaryTextView.setVisibility(View.VISIBLE);
+                save_Btn.setVisibility(View.VISIBLE);
+                contextEditText.setVisibility(View.VISIBLE);
+                textView2.setVisibility(View.INVISIBLE);
+                cha_Btn.setVisibility(View.INVISIBLE);
+                del_Btn.setVisibility(View.INVISIBLE);
+                diaryTextView.setText(String.format("%d / %d / %d", year, month + 1, dayOfMonth));
+                contextEditText.setText("");
+                checkDay(year, month, dayOfMonth, userID);
+            }
+        });
+
+        save_Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveDiary(fname);
+                str = contextEditText.getText().toString();
+                textView2.setText(str);
+                save_Btn.setVisibility(View.INVISIBLE);
+                cha_Btn.setVisibility(View.VISIBLE);
+                del_Btn.setVisibility(View.VISIBLE);
+                contextEditText.setVisibility(View.INVISIBLE);
+                textView2.setVisibility(View.VISIBLE);
             }
         });
 
         return view;
+    }
+
+    public void checkDay(int cYear, int cMonth, int cDay, String userID) {
+        fname = "" + userID + cYear + "-" + (cMonth + 1) + "" + "-" + cDay + ".txt";//저장할 파일 이름 설정
+        FileInputStream fis = null;//FileStream fis 변수
+
+        try {
+            fis = requireContext().openFileInput(fname);
+
+            byte[] fileData = new byte[fis.available()];
+            fis.read(fileData);
+            fis.close();
+
+            str = new String(fileData);
+
+            contextEditText.setVisibility(View.INVISIBLE);
+            textView2.setVisibility(View.VISIBLE);
+            textView2.setText(str);
+
+            save_Btn.setVisibility(View.INVISIBLE);
+            cha_Btn.setVisibility(View.VISIBLE);
+            del_Btn.setVisibility(View.VISIBLE);
+
+            cha_Btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    contextEditText.setVisibility(View.VISIBLE);
+                    textView2.setVisibility(View.INVISIBLE);
+                    contextEditText.setText(str);
+
+                    save_Btn.setVisibility(View.VISIBLE);
+                    cha_Btn.setVisibility(View.INVISIBLE);
+                    del_Btn.setVisibility(View.INVISIBLE);
+                    textView2.setText(contextEditText.getText());
+                }
+            });
+
+            del_Btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    textView2.setVisibility(View.INVISIBLE);
+                    contextEditText.setText("");
+                    contextEditText.setVisibility(View.VISIBLE);
+                    save_Btn.setVisibility(View.VISIBLE);
+                    cha_Btn.setVisibility(View.INVISIBLE);
+                    del_Btn.setVisibility(View.INVISIBLE);
+                    removeDiary(fname);
+                }
+            });
+
+            if (textView2.getText() == null) {
+                textView2.setVisibility(View.INVISIBLE);
+                diaryTextView.setVisibility(View.VISIBLE);
+                save_Btn.setVisibility(View.VISIBLE);
+                cha_Btn.setVisibility(View.INVISIBLE);
+                del_Btn.setVisibility(View.INVISIBLE);
+                contextEditText.setVisibility(View.VISIBLE);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("WrongConstant")
+    public void removeDiary(String readDay) {
+        FileOutputStream fos = null;
+
+        try {
+            fos = requireContext().openFileOutput(readDay, getActivity().MODE_NO_LOCALIZED_COLLATORS);
+            String content = "";
+            fos.write((content).getBytes());
+            fos.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("WrongConstant")
+    public void saveDiary(String readDay) {
+        FileOutputStream fos = null;
+
+        try {
+            fos = requireContext().openFileOutput(readDay, getActivity().MODE_NO_LOCALIZED_COLLATORS);
+            String content = contextEditText.getText().toString();
+            fos.write((content).getBytes());
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
