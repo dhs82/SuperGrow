@@ -54,7 +54,7 @@ public class FragStar extends Fragment {
         //로그인 및 회원가입 엑티비티에서 이름을 받아옴
         Intent intent = requireActivity().getIntent();
         String name = intent.getStringExtra("UserName");
-        userID = intent.getStringExtra("UserID");
+        userID = intent.getStringExtra("UserEmail");
         textView3.setText(name + "님의 달력 일기장");
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
