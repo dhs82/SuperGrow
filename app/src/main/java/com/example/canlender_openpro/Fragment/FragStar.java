@@ -18,10 +18,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.canlender_openpro.R;
+import com.example.canlender_openpro.ScheduleActivity;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
 
 public class FragStar extends Fragment {
 
@@ -30,7 +30,7 @@ public class FragStar extends Fragment {
     private String fname = null;
     private String str = null;
     private CalendarView calendarView;
-    private Button cha_Btn, del_Btn, save_Btn;
+    private Button cha_Btn, del_Btn, save_Btn, schedule_Btn;
     private TextView diaryTextView, textView2, textView3;
     private EditText contextEditText;
     private String userID; // 추가된 부분
@@ -49,11 +49,12 @@ public class FragStar extends Fragment {
         textView2 = view.findViewById(R.id.textView2);
         textView3 = view.findViewById(R.id.textView3);
         contextEditText = view.findViewById(R.id.contextEditText);
+        schedule_Btn = view.findViewById(R.id.schedule_Btn);
 
         //로그인 및 회원가입 엑티비티에서 이름을 받아옴
         Intent intent = requireActivity().getIntent();
         String name = intent.getStringExtra("UserName");
-        final String userID = intent.getStringExtra("UserID");
+        userID = intent.getStringExtra("UserID");
         textView3.setText(name + "님의 달력 일기장");
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -65,9 +66,28 @@ public class FragStar extends Fragment {
                 textView2.setVisibility(View.INVISIBLE);
                 cha_Btn.setVisibility(View.INVISIBLE);
                 del_Btn.setVisibility(View.INVISIBLE);
+                schedule_Btn.setVisibility(View.VISIBLE);
                 diaryTextView.setText(String.format("%d / %d / %d", year, month + 1, dayOfMonth));
                 contextEditText.setText("");
                 checkDay(year, month, dayOfMonth, userID);
+
+                // 선택된 날짜의 년도, 월, 일을 변수에 저장
+                int selectedYear = year;
+                int selectedMonth = month + 1; // 월은 0부터 시작하므로 1을 더해줍니다.
+                int selectedDay = dayOfMonth;
+
+                // ScheduleActivity에 전달할 데이터
+                schedule_Btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent scheduleIntent = new Intent(requireContext(), ScheduleActivity.class);
+                        scheduleIntent.putExtra("UserID", userID);
+                        scheduleIntent.putExtra("SelectedYear", selectedYear);
+                        scheduleIntent.putExtra("SelectedMonth", selectedMonth);
+                        scheduleIntent.putExtra("SelectedDay", selectedDay);
+                        startActivity(scheduleIntent);
+                    }
+                });
             }
         });
 
@@ -80,6 +100,7 @@ public class FragStar extends Fragment {
                 save_Btn.setVisibility(View.INVISIBLE);
                 cha_Btn.setVisibility(View.VISIBLE);
                 del_Btn.setVisibility(View.VISIBLE);
+                schedule_Btn.setVisibility(View.VISIBLE);
                 contextEditText.setVisibility(View.INVISIBLE);
                 textView2.setVisibility(View.VISIBLE);
             }
@@ -108,6 +129,7 @@ public class FragStar extends Fragment {
             save_Btn.setVisibility(View.INVISIBLE);
             cha_Btn.setVisibility(View.VISIBLE);
             del_Btn.setVisibility(View.VISIBLE);
+            schedule_Btn.setVisibility(View.VISIBLE);
 
             cha_Btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,6 +141,7 @@ public class FragStar extends Fragment {
                     save_Btn.setVisibility(View.VISIBLE);
                     cha_Btn.setVisibility(View.INVISIBLE);
                     del_Btn.setVisibility(View.INVISIBLE);
+                    schedule_Btn.setVisibility(View.VISIBLE);
                     textView2.setText(contextEditText.getText());
                 }
             });
@@ -132,6 +155,7 @@ public class FragStar extends Fragment {
                     save_Btn.setVisibility(View.VISIBLE);
                     cha_Btn.setVisibility(View.INVISIBLE);
                     del_Btn.setVisibility(View.INVISIBLE);
+                    schedule_Btn.setVisibility(View.VISIBLE);
                     removeDiary(fname);
                 }
             });
@@ -142,6 +166,7 @@ public class FragStar extends Fragment {
                 save_Btn.setVisibility(View.VISIBLE);
                 cha_Btn.setVisibility(View.INVISIBLE);
                 del_Btn.setVisibility(View.INVISIBLE);
+                schedule_Btn.setVisibility(View.VISIBLE);
                 contextEditText.setVisibility(View.VISIBLE);
             }
 
