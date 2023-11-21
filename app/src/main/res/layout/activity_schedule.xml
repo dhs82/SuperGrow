@@ -37,6 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonAddSchedule"
         android:layout_marginTop="16dp"
-        android:text="일정 내용 표시" />
+        android:text="일정이 없습니다" />
 
 </RelativeLayout>
