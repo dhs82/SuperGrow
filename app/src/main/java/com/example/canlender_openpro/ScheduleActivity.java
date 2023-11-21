@@ -1,5 +1,6 @@
 package com.example.canlender_openpro;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,8 +11,17 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class ScheduleActivity extends AppCompatActivity {
 
@@ -37,7 +47,11 @@ public class ScheduleActivity extends AppCompatActivity {
         buttonAddSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addSchedule(userID, cYear, cMonth, cDay);
+                try {
+                    addSchedule(userID, cYear, cMonth, cDay);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -54,25 +68,116 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private String generateFileName(String userID, int cYear, int cMonth, int cDay) {
         return "" + userID + cYear + "-" + (cMonth+1)  + "" + "-"+ cDay + ".txt";
-        //fname = "" + userID + cYear + "-" + (cMonth + 1) + "" + "-" + cDay + ".txt";//저장할 파일 이름 설정
     }
 
-    private void addSchedule(String userID, int cYear, int cMonth, int cDay) {
+    private void addSchedule(String userID, int cYear, int cMonth, int cDay) throws IOException {
+        // 파일명 생성
         String fname = generateFileName(userID, cYear, cMonth, cDay);
+
+        // 해당 날짜의 일정 개수를 1 증가시키는 메서드 호출
+        addScheduleplus(userID, cYear, cMonth, cDay);
+
+        // 파일 객체 생성
+        File file = new File(getFilesDir(), fname);
+
+        // 일정 내용을 에딧텍스트에서 가져오기
         String schedule = editTextSchedule.getText().toString();
 
         try {
-            FileOutputStream fos = openFileOutput(fname, MODE_APPEND);
+            // 파일을 append 모드로 열기 (true는 파일을 append 모드로 열게 합니다.)
+            FileOutputStream fos = new FileOutputStream(file, true);
+
+            // 일정 내용을 파일에 쓰기
             fos.write((schedule + "\n").getBytes());
+
+            // 파일 닫기
             fos.close();
+
+            // 사용자에게 일정 추가 완료 메시지 표시
             Toast.makeText(this, "일정이 추가되었습니다.", Toast.LENGTH_SHORT).show();
 
             // 업데이트된 일정을 TextView에 표시
             updateScheduleTextView(userID, cYear, cMonth, cDay);
         } catch (Exception e) {
+            // 예외 발생 시 에러 로그 출력
             e.printStackTrace();
         }
     }
+
+
+    public void addScheduleplus(String userID, int cYear, int cMonth, int cDay) {
+        // 파일명 생성
+        String fname = generateFileName(userID, cYear, cMonth, cDay);
+
+        try {
+            // 파일이 존재하지 않으면 생성
+            File file = new File(getFilesDir(), fname);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            // 파일을 읽고 쓰기 위해 BufferedReader와 FileWriter 대신에 FileInputStream과 FileOutputStream 사용
+            FileInputStream fis = new FileInputStream(file);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader reader = new BufferedReader(isr);
+
+            // 임시 파일 생성
+            FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), fname + "_temp"));
+
+            // 맨 첫 줄 읽기
+            String firstLine = reader.readLine();
+
+            int value;
+            if (firstLine != null) {
+                // 파일이 비어있지 않으면 정수로 변환 후 1을 더함
+                value = Integer.parseInt(firstLine.trim()) + 1;
+            } else {
+                // 파일이 비어있으면 0으로 초기화
+                value = 0;
+            }
+
+            // 맨 첫 줄에 새로운 값 쓰기
+            fos.write(String.valueOf(value).getBytes());
+
+            // 파일이 비어있을 때만 한 번 줄바꿈 추가
+            if (firstLine == null) {
+                fos.write('\n');
+            }
+
+            // 나머지 파일 내용 복사
+            if (firstLine != null) {
+                fos.write('\n'); // 첫 줄을 이미 처리했으므로 다시 쓰지 않음
+            }
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fos.write((line + "\n").getBytes());
+            }
+
+            // 사용한 리소스 닫기
+            fis.close();
+            fos.close();
+
+            // 임시 파일을 원래 파일로 복사
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Files.move(Paths.get(new File(getFilesDir(), fname + "_temp").getPath()),
+                        Paths.get(file.getPath()), StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // 사용자에게 일정 추가 완료 메시지 표시
+            Toast.makeText(this, "일정이 추가되었습니다.", Toast.LENGTH_SHORT).show();
+
+            // 업데이트된 일정을 TextView에 표시
+            updateScheduleTextView(userID, cYear, cMonth, cDay);
+        } catch (IOException | NumberFormatException e) {
+            // 예외 발생 시 에러 로그 출력
+            e.printStackTrace();
+
+            // 사용자에게 파일 열기 오류 메시지 표시
+            Toast.makeText(this, "파일을 열 수 없습니다. 오류 메시지: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     private void deleteSchedule(String userID, int cYear, int cMonth, int cDay) {
         String fname = generateFileName(userID, cYear, cMonth, cDay);
