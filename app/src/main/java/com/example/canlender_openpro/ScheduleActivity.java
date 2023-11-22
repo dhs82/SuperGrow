@@ -25,7 +25,7 @@ import java.nio.file.StandardCopyOption;
 
 public class ScheduleActivity extends AppCompatActivity {
 
-    private EditText editTextSchedule;
+    private EditText editTextSchedule,deleteTextSchedule;
     private TextView textView2Schedule;
 
     @Override
@@ -34,6 +34,7 @@ public class ScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_schedule);
 
         editTextSchedule = findViewById(R.id.editTextSchedule);
+        deleteTextSchedule = findViewById(R.id.deleteTextSchedule);
         Button buttonAddSchedule = findViewById(R.id.buttonAddSchedule);
         Button buttonDeleteSchedule = findViewById(R.id.buttonDeleteSchedule);
         textView2Schedule = findViewById(R.id.textView2Schedule);
@@ -58,22 +59,32 @@ public class ScheduleActivity extends AppCompatActivity {
         buttonDeleteSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String lineString = editTextSchedule.getText().toString();
-                try {
+                String lineString = deleteTextSchedule.getText().toString();
+
+                // 입력이 자연수인지 검증
+                if (isValidPositiveInteger(lineString)) {
                     int line = Integer.parseInt(lineString);
-                    int tmp;
-                    tmp=(line-1)*2+2;
-                    deleteSchedule(userID, cYear, cMonth, cDay,tmp+1);
-                    // 여기서 'line' 변수를 사용할 수 있습니다.
-                } catch (NumberFormatException e) {
-                    // 문자열이 유효한 정수로 변환되지 않는 경우 예외 처리
-                    e.printStackTrace();
+                    int tmp = (line - 1) * 2 + 2;
+                    deleteSchedule(userID, cYear, cMonth, cDay, tmp + 1);
+                    // 'line' 변수를 사용할 수 있습니다.
+                } else {
+                    // 유효하지 않은 입력에 대한 오류 메시지 표시
+                    Toast.makeText(ScheduleActivity.this, "삭제할 라인은 자연수여야 합니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         // 저장된 일정을 표시
         updateScheduleTextView(userID, cYear, cMonth, cDay);
+    }
+    // 자연수인지 확인하는 유효성 검사 메서드
+    private boolean isValidPositiveInteger(String input) {
+        try {
+            int value = Integer.parseInt(input);
+            return value > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private String generateFileName(String userID, int cYear, int cMonth, int cDay) {
@@ -221,6 +232,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 Toast.makeText(this, "일정이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "삭제할 일정이 없습니다.", Toast.LENGTH_SHORT).show();
+                addScheduleplus(userID, cYear, cMonth, cDay);
             }
 
             // 업데이트된 일정을 TextView에 표시
@@ -310,9 +322,36 @@ public class ScheduleActivity extends AppCompatActivity {
             fis.close();
 
             String existingSchedules = new String(fileData);
-            textView2Schedule.setText(existingSchedules);
+            String[] schedulesArray = existingSchedules.split("\n");
+
+            StringBuilder formattedSchedules = new StringBuilder();
+
+            //0번째 라인 출력하는 코드
+            formattedSchedules.append("1. ").append(schedulesArray[0]).append("\n");
+            for (int i = 1; i < schedulesArray.length; i += 2) {
+                formattedSchedules.append((i + 1) / 2).append(". ").append(schedulesArray[i]).append("\n");
+            }
+
+            textView2Schedule.setText(formattedSchedules.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    //전 라인 호출 코드
+    /*private void updateScheduleTextView(String userID, int cYear, int cMonth, int cDay) {
+        String fname = generateFileName(userID, cYear, cMonth, cDay);
+
+        try {
+            FileInputStream fis = openFileInput(fname);
+            byte[] fileData = new byte[fis.available()];
+            fis.read(fileData);
+            fis.close();
+
+            String existingSchedules = new String(fileData);
+            textView2Schedule.setText(existingSchedules);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
+
 }
