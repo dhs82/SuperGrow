@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_below="@id/calendarView"
+            android:fontFamily="@font/wildfont"
             />
 
         <RelativeLayout
@@ -64,8 +65,9 @@
             android:layout_marginEnd="8dp"
             android:gravity="center"
             android:text="달력일기장"
+            android:fontFamily="@font/wildfont"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#9E28B3"
+            android:textColor="#A1ADF1"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
