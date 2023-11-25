@@ -6,4 +6,8 @@
     <color name="colorPrimaryDark">#FF7043</color>
     <color name="colorAccent">#FFAB40</color>
     <color name="colorGray">#8C8C8C</color>
+    <color name="CornFlowerBlue">#87CEFA</color>
+    <color name="mediumaquamarine">#66CDAA</color>
+    <color name="mediumvalue">#BFD6F6</color>
+
 </resources>
