@@ -30,9 +30,8 @@ public class FragStar extends Fragment {
     private String fname = null;
     private String str = null;
     private CalendarView calendarView;
-    private Button cha_Btn, del_Btn, save_Btn, schedule_Btn;
+    private Button schedule_Btn;
     private TextView diaryTextView, textView2, textView3;
-    private EditText contextEditText;
     private String userID; // 추가된 부분
 
     @Nullable
@@ -43,12 +42,8 @@ public class FragStar extends Fragment {
 
         calendarView = view.findViewById(R.id.calendarView);
         diaryTextView = view.findViewById(R.id.diaryTextView);
-        save_Btn = view.findViewById(R.id.save_Btn);
-        del_Btn = view.findViewById(R.id.del_Btn);
-        cha_Btn = view.findViewById(R.id.cha_Btn);
         textView2 = view.findViewById(R.id.textView2);
         textView3 = view.findViewById(R.id.textView3);
-        contextEditText = view.findViewById(R.id.contextEditText);
         schedule_Btn = view.findViewById(R.id.schedule_Btn);
 
         //로그인 및 회원가입 엑티비티에서 이름을 받아옴
@@ -61,14 +56,9 @@ public class FragStar extends Fragment {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 diaryTextView.setVisibility(View.VISIBLE);
-                save_Btn.setVisibility(View.VISIBLE);
-                contextEditText.setVisibility(View.VISIBLE);
                 textView2.setVisibility(View.INVISIBLE);
-                cha_Btn.setVisibility(View.INVISIBLE);
-                del_Btn.setVisibility(View.INVISIBLE);
                 schedule_Btn.setVisibility(View.VISIBLE);
                 diaryTextView.setText(String.format("%d / %d / %d", year, month + 1, dayOfMonth));
-                contextEditText.setText("");
                 checkDay(year, month, dayOfMonth, userID);
 
                 // 선택된 날짜의 년도, 월, 일을 변수에 저장
@@ -91,21 +81,6 @@ public class FragStar extends Fragment {
             }
         });
 
-        save_Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveDiary(fname);
-                str = contextEditText.getText().toString();
-                textView2.setText(str);
-                save_Btn.setVisibility(View.INVISIBLE);
-                cha_Btn.setVisibility(View.VISIBLE);
-                del_Btn.setVisibility(View.VISIBLE);
-                schedule_Btn.setVisibility(View.VISIBLE);
-                contextEditText.setVisibility(View.INVISIBLE);
-                textView2.setVisibility(View.VISIBLE);
-            }
-        });
-
         return view;
     }
 
@@ -122,52 +97,16 @@ public class FragStar extends Fragment {
 
             str = new String(fileData);
 
-            contextEditText.setVisibility(View.INVISIBLE);
             textView2.setVisibility(View.VISIBLE);
             textView2.setText(str);
 
-            save_Btn.setVisibility(View.INVISIBLE);
-            cha_Btn.setVisibility(View.VISIBLE);
-            del_Btn.setVisibility(View.VISIBLE);
             schedule_Btn.setVisibility(View.VISIBLE);
 
-            cha_Btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    contextEditText.setVisibility(View.VISIBLE);
-                    textView2.setVisibility(View.INVISIBLE);
-                    contextEditText.setText(str);
-
-                    save_Btn.setVisibility(View.VISIBLE);
-                    cha_Btn.setVisibility(View.INVISIBLE);
-                    del_Btn.setVisibility(View.INVISIBLE);
-                    schedule_Btn.setVisibility(View.VISIBLE);
-                    textView2.setText(contextEditText.getText());
-                }
-            });
-
-            del_Btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    textView2.setVisibility(View.INVISIBLE);
-                    contextEditText.setText("");
-                    contextEditText.setVisibility(View.VISIBLE);
-                    save_Btn.setVisibility(View.VISIBLE);
-                    cha_Btn.setVisibility(View.INVISIBLE);
-                    del_Btn.setVisibility(View.INVISIBLE);
-                    schedule_Btn.setVisibility(View.VISIBLE);
-                    removeDiary(fname);
-                }
-            });
 
             if (textView2.getText() == null) {
                 textView2.setVisibility(View.INVISIBLE);
                 diaryTextView.setVisibility(View.VISIBLE);
-                save_Btn.setVisibility(View.VISIBLE);
-                cha_Btn.setVisibility(View.INVISIBLE);
-                del_Btn.setVisibility(View.INVISIBLE);
                 schedule_Btn.setVisibility(View.VISIBLE);
-                contextEditText.setVisibility(View.VISIBLE);
             }
 
         } catch (Exception e) {
@@ -175,32 +114,4 @@ public class FragStar extends Fragment {
         }
     }
 
-    @SuppressLint("WrongConstant")
-    public void removeDiary(String readDay) {
-        FileOutputStream fos = null;
-
-        try {
-            fos = requireContext().openFileOutput(readDay, getActivity().MODE_NO_LOCALIZED_COLLATORS);
-            String content = "";
-            fos.write((content).getBytes());
-            fos.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressLint("WrongConstant")
-    public void saveDiary(String readDay) {
-        FileOutputStream fos = null;
-
-        try {
-            fos = requireContext().openFileOutput(readDay, getActivity().MODE_NO_LOCALIZED_COLLATORS);
-            String content = contextEditText.getText().toString();
-            fos.write((content).getBytes());
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
