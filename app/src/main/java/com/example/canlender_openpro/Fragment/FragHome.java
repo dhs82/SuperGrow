@@ -111,6 +111,7 @@ public class FragHome extends Fragment {
                     @Override
                     public void run() {
                         updateWeatherImage(mainWeather);
+                        updateWeatherString(mainWeather);
                     }
                 });
             } else {
@@ -144,10 +145,33 @@ public class FragHome extends Fragment {
             }
         }
     }
+    private String getWeatherString(String mainWeather) {
 
+        if ("clouds".equalsIgnoreCase(mainWeather)) {
+            return "오늘 구름이 많이 꼈엉..";
+        } else if ("clear".equalsIgnoreCase(mainWeather)) {
+            return "날씨 완전 쭈으당 ! ㅎㅎ";
+        } else if ("rain".equalsIgnoreCase(mainWeather)) {
+            return "우산 챙기는거 잊지망 ! ㅎㅎ";
+        } else if ("snow".equalsIgnoreCase(mainWeather)) {
+            return "눈 오는거 정말 이뿌당 ! ㅎㅎ";
+        } else if ("mist".equalsIgnoreCase(mainWeather) || "drizzle".equalsIgnoreCase(mainWeather)) {
+            return "오늘은 조금 꿉꿉하드앙..";
+        } else {
+            return "알 수 없는 날씨 상태입니다.";
+        }
+
+
+    }
+    private String updateWeatherString(String mainWeather) {
+        TextView weatherStringTextView = view.findViewById(R.id.weatherString);
+        String weatherString = getWeatherString(mainWeather);
+        weatherStringTextView.setText(weatherString);
+        return weatherString;
+    }
     private void updateWeatherImage(String mainWeather) {
         ImageView weatherImage = view.findViewById(R.id.weatherImage);
-
+        String weatherString = updateWeatherString(mainWeather);
         if ("clouds".equalsIgnoreCase(mainWeather)) {
             weatherImage.setImageResource(R.drawable.opensw_cloud);
             weatherImage.setVisibility(View.VISIBLE);

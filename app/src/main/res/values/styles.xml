@@ -17,4 +17,21 @@
     <style name="urgentButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
+    // main,login 상단바 색상 다르게 하기
+    <style name="MainTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="colorPrimaryDark">@color/mediumvalue</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- ... other theme attributes ... -->
+    </style>
+
+    <style name="LoginTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="colorPrimaryDark">@color/mediumvalue</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- ... other theme attributes ... -->
+    </style>
+
 </resources>
