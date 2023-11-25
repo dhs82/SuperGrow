@@ -21,9 +21,16 @@
         android:layout_marginTop="16dp"
         android:text="일정 추가" />
 
-    <!-- 삭제할 라인 입력을 위한 EditText -->
-
     <!-- 일정 삭제 버튼 -->
+    <Button
+        android:id="@+id/buttonDeleteSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/deleteTextSchedule"
+        android:layout_marginTop="16dp"
+        android:text="일정 삭제" />
+
+    <!-- 삭제할 라인 입력을 위한 EditText -->
     <EditText
         android:id="@+id/deleteTextSchedule"
         android:layout_width="match_parent"
@@ -34,20 +41,17 @@
         android:minHeight="48dp" />
 
     <!-- 텍스트뷰로 일정 표시 -->
-    <Button
-        android:id="@+id/buttonDeleteSchedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/deleteTextSchedule"
-        android:layout_marginTop="6dp"
-        android:text="일정 삭제" />
-
-    <TextView
-        android:id="@+id/textView2Schedule"
+    <RelativeLayout
+        android:id="@+id/textViewLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonDeleteSchedule"
-        android:layout_marginTop="19dp"
-        android:text="일정이 없습니다" />
+        android:layout_marginTop="19dp">
 
+        <TextView
+            android:id="@+id/textView2Schedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일정이 없습니다" />
+    </RelativeLayout>
 </RelativeLayout>

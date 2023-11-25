@@ -3,9 +3,11 @@ package com.example.canlender_openpro;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -311,66 +313,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
         return decrementValue;
     }
-    @SuppressLint("ResourceType")
-    private void updateScheduleTextView(String userID, int cYear, int cMonth, int cDay) {
-        // 파일 이름 생성
-        String fname = generateFileName(userID, cYear, cMonth, cDay);
-
-        try {
-            // 파일 읽기를 위한 FileInputStream 생성
-            FileInputStream fis = openFileInput(fname);
-            byte[] fileData = new byte[fis.available()];
-            fis.read(fileData);
-            fis.close();
-
-            // 파일 내용을 문자열로 변환
-            String existingSchedules = new String(fileData);
-            // 개행 문자를 기준으로 일정을 나누어 배열로 저장
-            String[] schedulesArray = existingSchedules.split("\n");
-
-            // 각 라인에 채크박스 추가
-            for (int i = 1; i < schedulesArray.length; i += 2) {
-                // "A"를 추가
-                String lineWithA = String.valueOf((i+1)/2) +". " + schedulesArray[i];
-
-                // CheckBox 생성
-                CheckBox checkBox = new CheckBox(this);
-                // 채크박스에 고유한 ID 부여
-                checkBox.setId(View.generateViewId());
-                // 채크박스에 일정 텍스트 설정
-                checkBox.setText(lineWithA);
-
-                // 생성한 채크박스를 레이아웃에 추가하기 위한 레이아웃 파라미터 생성
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT
-                );
-
-                if (i > 1) {
-                    // 이전 채크박스 아래에 배치
-                    params.addRule(RelativeLayout.BELOW, checkBox.getId() - 1);
-                } else {
-                    // 첫 번째 채크박스는 일정의 번호를 표시하는 TextView 아래에 배치
-                    params.addRule(RelativeLayout.BELOW, R.id.textView2Schedule);
-                }
-
-                // 채크박스에 레이아웃 파라미터 설정
-                checkBox.setLayoutParams(params);
-                // 채크박스를 레이아웃에 추가
-                ((RelativeLayout) findViewById(R.id.schedulelayout)).addView(checkBox);
-            }
-        } catch (Exception e) {
-            // 예외 발생 시 에러 메시지 출력
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-    //기존코드
 /*
-    @SuppressLint("ResourceType")
     private void updateScheduleTextView(String userID, int cYear, int cMonth, int cDay) {
         String fname = generateFileName(userID, cYear, cMonth, cDay);
 
@@ -388,27 +331,6 @@ public class ScheduleActivity extends AppCompatActivity {
             //0번째 라인 출력하는 코드
             formattedSchedules.append("1. ").append(schedulesArray[0]).append("\n");
             for (int i = 1; i < schedulesArray.length; i += 2) {
-                CheckBox checkBox = new CheckBox(this);
-                checkBox.setId(View.generateViewId());  // 채크박스에 고유한 ID 부여
-                checkBox.setText(schedulesArray[i]);
-
-                // 생성한 채크박스를 레이아웃에 추가
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT
-                );
-
-                if (i > 0) {
-                    // 이전 채크박스 아래에 배치
-                    params.addRule(RelativeLayout.BELOW, checkBox.getId() - 1);
-                } else {
-                    // 첫 번째 채크박스는 일정의 번호를 표시하는 TextView 아래에 배치
-                    params.addRule(RelativeLayout.BELOW, R.id.textView2Schedule);
-                }
-
-                checkBox.setLayoutParams(params);
-                ((RelativeLayout) findViewById(R.id.schedulelayout)).addView(checkBox);
-
                 formattedSchedules.append((i + 1) / 2).append(". ").append(schedulesArray[i]).append("\n");
             }
 
@@ -417,6 +339,104 @@ public class ScheduleActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    */
+@SuppressLint("ResourceType")
+private void updateScheduleTextView(String userID, int cYear, int cMonth, int cDay) {
+    // 파일 이름 생성
+    String fname = generateFileName(userID, cYear, cMonth, cDay);
 
- */
+    try {
+        // 파일 읽기를 위한 FileInputStream 생성
+        FileInputStream fis = openFileInput(fname);
+        byte[] fileData = new byte[fis.available()];
+        fis.read(fileData);
+        fis.close();
+
+        // 파일 내용을 문자열로 변환
+        String existingSchedules = new String(fileData);
+        // 개행 문자를 기준으로 일정을 나누어 배열로 저장
+        String[] schedulesArray = existingSchedules.split("\n");
+
+        ((RelativeLayout) findViewById(R.id.textViewLayout)).removeAllViews();
+
+        // 각 라인에 채크박스 추가
+        for (int i = 1; i < schedulesArray.length; i += 2) {
+            String lineWithA = String.valueOf((i + 1) / 2) + ". " + schedulesArray[i];
+
+            // CheckBox 생성
+            CheckBox checkBox = new CheckBox(this);
+            // 채크박스에 고유한 ID 부여
+            checkBox.setId(View.generateViewId());
+            // 채크박스에 일정 텍스트 설정
+            checkBox.setText(lineWithA);
+
+            // 생성한 채크박스를 레이아웃에 추가하기 위한 레이아웃 파라미터 생성
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            if (i > 1) {
+                // 이전 채크박스 아래에 배치
+                params.addRule(RelativeLayout.BELOW, checkBox.getId() - 1);
+            } else {
+                // 첫 번째 채크박스는 일정의 번호를 표시하는 TextView 아래에 배치
+                params.addRule(RelativeLayout.BELOW, R.id.textView2Schedule);
+            }
+
+            // 채크박스에 레이아웃 파라미터 설정
+            checkBox.setLayoutParams(params);
+            // 채크박스를 레이아웃에 추가
+            ((RelativeLayout) findViewById(R.id.textViewLayout)).addView(checkBox);
+
+            // CheckBox에 OnCheckedChangeListener 추가
+            int finalI = i;
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    // 체크박스가 체크되었을 때 해당 다음 라인의 일정을 "Yes"로 수정
+                    if (isChecked) {
+                        schedulesArray[finalI + 1] = "Yes";
+                        //Toast.makeText(ScheduleActivity.this, lineWithA + " 일정이 Yes로 변경되었습니다.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // 체크가 해제되었을 때 "No"로 변경
+                        schedulesArray[finalI + 1] = "No";
+                        //Toast.makeText(ScheduleActivity.this, lineWithA + " 일정이 No로 변경되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    // 수정된 일정을 파일에 저장
+                    saveSchedulesToFile(schedulesArray, fname);
+                }
+            });
+
+            // "Yes"인 경우에만 체크 상태 설정
+            if (i + 1 < schedulesArray.length && schedulesArray[i + 1].equals("Yes")) {
+                checkBox.setChecked(true);
+            }
+        }
+    } catch (Exception e) {
+        // 예외 발생 시 에러 메시지 출력
+        e.printStackTrace();
+    }
 }
+
+
+    // 일정을 파일에 저장하는 메서드
+    private void saveSchedulesToFile(String[] schedulesArray,String filename) {
+        try {
+            // StringBuilder를 사용하여 수정된 일정을 다시 문자열로 구성
+            StringBuilder modifiedSchedules = new StringBuilder();
+            for (String schedule : schedulesArray) {
+                modifiedSchedules.append(schedule).append("\n");
+            }
+
+            // 파일 쓰기를 위한 FileOutputStream 생성
+            FileOutputStream fos = openFileOutput(filename, MODE_PRIVATE);
+            fos.write(modifiedSchedules.toString().getBytes());
+            fos.close();
+        } catch (Exception e) {
+            // 예외 발생 시 에러 메시지 출력
+            e.printStackTrace();
+        }
+    }
+}
+
