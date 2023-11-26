@@ -160,5 +160,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
+    <Button
+        android:id="@+id/background_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="배경 화면 색 수정"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.199"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintVertical_bias="0.512" />
+
+    <Button
+        android:id="@+id/memo_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="메모장 열기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.73"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintVertical_bias="0.512" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
