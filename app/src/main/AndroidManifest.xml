@@ -20,6 +20,16 @@
             android:name=".ScheduleActivity"
             android:exported="true"
             />
+
+        <activity
+            android:name=".BackgroundActivity"
+            android:exported="true"
+            />
+
+        <activity
+            android:name=".MemoActivity"
+            android:exported="true"
+            />
         <activity
             android:name=".MainActivity"
             android:theme="@style/MainTheme"

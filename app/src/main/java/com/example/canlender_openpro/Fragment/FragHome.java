@@ -1,5 +1,6 @@
 package com.example.canlender_openpro.Fragment;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.canlender_openpro.BackgroundActivity;
+import com.example.canlender_openpro.MemoActivity;
 import com.example.canlender_openpro.R;
 
 import org.json.JSONArray;
@@ -69,6 +72,26 @@ public class FragHome extends Fragment {
     private void updateCurrentDate() {
         String currentDate = dateFormat.format(new Date());
         dateTextView.setText("현재 날짜: " + currentDate);
+
+        // 버튼 클릭 이벤트 처리
+        View backgroundButton = view.findViewById(R.id.background_Btn);
+        View memoButton = view.findViewById(R.id.memo_Btn);
+        backgroundButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // BackgroundActivity로 이동하는 Intent 생성
+                Intent intent = new Intent(getActivity(), BackgroundActivity.class);
+                startActivity(intent);
+            }
+        });
+        memoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // BackgroundActivity로 이동하는 Intent 생성
+                Intent intent = new Intent(getActivity(), MemoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private class WeatherDataDownloader extends AsyncTask<Void, Void, String> {
