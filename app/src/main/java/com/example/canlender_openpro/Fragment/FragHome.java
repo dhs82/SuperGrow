@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.canlender_openpro.BackgroundActivity;
 import com.example.canlender_openpro.MemoActivity;
+import com.example.canlender_openpro.NasaActivity;
 import com.example.canlender_openpro.R;
 
 import org.json.JSONArray;
@@ -76,6 +77,7 @@ public class FragHome extends Fragment {
         // 버튼 클릭 이벤트 처리
         View backgroundButton = view.findViewById(R.id.background_Btn);
         View memoButton = view.findViewById(R.id.memo_Btn);
+        View nasaButton = view.findViewById(R.id.nasa_Btn);
         backgroundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +94,15 @@ public class FragHome extends Fragment {
                 startActivity(intent);
             }
         });
+        nasaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // BackgroundActivity로 이동하는 Intent 생성
+                Intent intent = new Intent(getActivity(), NasaActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private class WeatherDataDownloader extends AsyncTask<Void, Void, String> {

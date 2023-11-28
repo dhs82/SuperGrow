@@ -29,7 +29,12 @@
             />
 
         <activity
-            android:name=".BackgroundActivity"
+                android:name=".BackgroundActivity"
+            android:exported="true"
+            />
+
+        <activity
+            android:name=".NasaActivity"
             android:exported="true"
             />
 
