@@ -14,16 +14,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:fontFamily="@font/wildfont"
             android:textSize="16sp" />
 
     </ScrollView>
 
     <Button
         android:id="@+id/btnSearchFiles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="146dp"
+        android:layout_height="58dp"
         android:layout_centerInParent="true"
+        android:backgroundTint="#A1ADF1"
+        android:fontFamily="@font/wildfont"
         android:onClick="onSearchFilesButtonClick"
-        android:text="이번달 일정" />
+        android:text="이번달 일정"
+        android:textColor="#FFFFFF"
+        android:textSize="18dp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
