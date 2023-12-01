@@ -10,11 +10,11 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="211dp"
-        android:layout_height="87dp"
-        android:text="현재 날짜: "
-        android:textSize="15sp"
+        android:layout_width="290dp"
+        android:layout_height="78dp"
         android:fontFamily="@font/wildfont"
+        android:text="현재 날짜: "
+        android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.071"
@@ -175,27 +175,35 @@
 
     <Button
         android:id="@+id/background_Btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="148dp"
+        android:layout_height="48dp"
+        android:backgroundTint="#A1ADF1"
+        android:fontFamily="@font/wildfont"
         android:text="배경 화면 색 수정"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.199"
+        app:layout_constraintHorizontal_bias="0.192"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:layout_constraintVertical_bias="0.512" />
+        app:layout_constraintVertical_bias="0.53" />
 
     <Button
         android:id="@+id/memo_Btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="137dp"
+        android:layout_height="47dp"
+        android:backgroundTint="#A1ADF1"
+        android:fontFamily="@font/wildfont"
         android:text="메모장 열기"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.73"
+        app:layout_constraintHorizontal_bias="0.821"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:layout_constraintVertical_bias="0.512" />
+        app:layout_constraintVertical_bias="0.523" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
