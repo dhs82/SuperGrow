@@ -71,7 +71,13 @@ public class FragFriend extends Fragment implements OnMapReadyCallback {
     private void addMarkers() {
         // 첫 번째 마커
         LatLng marker1 = new LatLng(36.6258446, 127.4542446);
-        mMap.addMarker(new MarkerOptions().position(marker1).title("Marker 1").snippet("Description for Marker 1"));
+        mMap.
+
+
+
+
+
+                addMarker(new MarkerOptions().position(marker1).title("Marker 1").snippet("Description for Marker 1"));
 
         // 두 번째 마커
         LatLng marker2 = new LatLng(36.6239046, 127.4592405);
