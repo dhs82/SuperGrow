@@ -35,9 +35,10 @@
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.31" />
+        app:layout_constraintVertical_bias="0.259" />
 
     <ImageView
         android:id="@+id/weatherframe"
@@ -53,10 +54,10 @@
 
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.347"
+        app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.106" />
 
     <ImageView
         android:id="@+id/character"
@@ -118,9 +119,11 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="115dp"
-        android:text="홈: 메인화면"
-        android:textColor="#FF9800"
+        android:layout_marginTop="130dp"
+        android:drawableLeft="@drawable/home"
+        android:fontFamily="@font/wildfont"
+        android:text=" 메인화면"
+        android:textColor="#F37168"
         android:textSize="24sp"
 
         app:layout_constraintBottom_toTopOf="@+id/textView3"
@@ -133,8 +136,10 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="스타: 일정확인"
-        android:textColor="#FF9800"
+        android:drawableLeft="@drawable/star"
+        android:text=" 일정확인"
+        android:fontFamily="@font/wildfont"
+        android:textColor="#F39A17"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
@@ -145,7 +150,9 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="프랜드: 지도확인"
+        android:drawableLeft="@drawable/group"
+        android:text=" 지도확인"
+        android:fontFamily="@font/wildfont"
         android:textColor="#03A9F4"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
@@ -157,8 +164,10 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="침대: 일정 정리"
-        android:textColor="#FB8484"
+        android:drawableLeft="@drawable/hotel"
+        android:text=" 일정 정리"
+        android:fontFamily="@font/wildfont"
+        android:textColor="#5D72EA"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
