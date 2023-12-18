@@ -179,7 +179,7 @@
         android:layout_height="48dp"
         android:backgroundTint="#A1ADF1"
         android:fontFamily="@font/wildfont"
-        android:text="배경 화면 색 수정"
+        android:text="이번 주 일성 달성률"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

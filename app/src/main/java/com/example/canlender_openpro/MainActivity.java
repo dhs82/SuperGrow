@@ -1,5 +1,6 @@
 package com.example.canlender_openpro;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -75,5 +76,15 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        Intent intent = getIntent();
+        if (intent != null) {
+            String userEmail = intent.getStringExtra("UserEmail");
+            if (userEmail != null) {
+                // Bundle을 사용하여 데이터를 Fragment에 전달
+                Bundle bundle = new Bundle();
+                bundle.putString("UserEmail", userEmail);
+                fragment_home.setArguments(bundle);
+            }
+        }
     }
 }
