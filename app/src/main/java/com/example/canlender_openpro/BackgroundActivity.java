@@ -39,13 +39,19 @@ public class BackgroundActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_background);
 
+        // 레이아웃에서 LineChart 찾기
         lineChart = findViewById(R.id.lineChart);
         // 사용자 아이디 가져오기
         userID = getIntent().getStringExtra("UserEmail");
 
+        // 배열 초기화
+        YesNumArray = new int[7];
+        totalEventsArray = new int[7];
+
         onSearchFilesButtonClick();
         setupLineChart();
     }
+
     private void setupLineChart() {
         // 꺾은선 그래프 설정
         lineChart.setTouchEnabled(true);
@@ -138,14 +144,6 @@ public class BackgroundActivity extends AppCompatActivity {
 
     }
 
-    /*private String formatDate(int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month - 1, day); // Month is 0-based
-        Date date = calendar.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
-        return sdf.format(date);
-    }
-*/
     private void readEvenLines(File file,int day) {
         /*StringBuilder contents = new StringBuilder();*/
 
@@ -165,7 +163,6 @@ public class BackgroundActivity extends AppCompatActivity {
                 else {
                     // 홀수 번째 라인인 경우
                     if (lineNum % 2 == 1) {
-                        /*contents.append(totalEventsArray[day] / 2).append(": ").append(line).append("\n");*/
                         if ("Yes".equals(line.trim())) {
                             YesNumArray[day]++;
                         }

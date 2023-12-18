@@ -83,6 +83,14 @@ public class FragHome extends Fragment {
             public void onClick(View v) {
                 // BackgroundActivity로 이동하는 Intent 생성
                 Intent intent = new Intent(getActivity(), BackgroundActivity.class);
+                // MainActivity에서 전달받은 userEmail을 Intent에 추가
+                Bundle bundle = getArguments();
+                if (bundle != null) {
+                    String userEmail = bundle.getString("UserEmail");
+                    if (userEmail != null) {
+                        intent.putExtra("UserEmail", userEmail);
+                    }
+                }
                 startActivity(intent);
             }
         });
@@ -99,6 +107,7 @@ public class FragHome extends Fragment {
             public void onClick(View v) {
                 // BackgroundActivity로 이동하는 Intent 생성
                 Intent intent = new Intent(getActivity(), NasaActivity.class);
+
                 startActivity(intent);
             }
         });
