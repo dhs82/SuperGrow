@@ -96,6 +96,10 @@ public class ScheduleActivity extends AppCompatActivity {
         return "" + userID + cYear + "-" + (cMonth+1)  + "" + "-"+ cDay + ".txt";
     }
 
+    public String addexp(String userID){
+        return "" +userID +"exp"+ ".txt";
+    }
+
     private void addSchedule(String userID, int cYear, int cMonth, int cDay) throws IOException {
         // 파일명 생성
         String fname = generateFileName(userID, cYear, cMonth, cDay);
@@ -135,10 +139,23 @@ public class ScheduleActivity extends AppCompatActivity {
     public void addScheduleplus(String userID, int cYear, int cMonth, int cDay) {
         // 파일명 생성
         String fname = generateFileName(userID, cYear, cMonth, cDay);
+        String ename = addexp(userID);
 
+        // 파일을 처리하는 메서드 호출
+        processFile(fname);
+        processFile(ename);
+
+        // 사용자에게 일정 추가 완료 메시지 표시
+        Toast.makeText(this, "일정이 추가되었습니다.", Toast.LENGTH_SHORT).show();
+
+        // 업데이트된 일정을 TextView에 표시
+        updateScheduleTextView(userID, cYear, cMonth, cDay);
+    }
+
+    private void processFile(String fileName) {
         try {
             // 파일이 존재하지 않으면 생성
-            File file = new File(getFilesDir(), fname);
+            File file = new File(getFilesDir(), fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -149,7 +166,7 @@ public class ScheduleActivity extends AppCompatActivity {
             BufferedReader reader = new BufferedReader(isr);
 
             // 임시 파일 생성
-            FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), fname + "_temp"));
+            FileOutputStream fos = new FileOutputStream(new File(getFilesDir(), fileName + "_temp"));
 
             // 맨 첫 줄 읽기
             String firstLine = reader.readLine();
@@ -186,15 +203,9 @@ public class ScheduleActivity extends AppCompatActivity {
 
             // 임시 파일을 원래 파일로 복사
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Files.move(Paths.get(new File(getFilesDir(), fname + "_temp").getPath()),
+                Files.move(Paths.get(new File(getFilesDir(), fileName + "_temp").getPath()),
                         Paths.get(file.getPath()), StandardCopyOption.REPLACE_EXISTING);
             }
-
-            // 사용자에게 일정 추가 완료 메시지 표시
-            Toast.makeText(this, "일정이 추가되었습니다.", Toast.LENGTH_SHORT).show();
-
-            // 업데이트된 일정을 TextView에 표시
-            updateScheduleTextView(userID, cYear, cMonth, cDay);
         } catch (IOException | NumberFormatException e) {
             // 예외 발생 시 에러 로그 출력
             e.printStackTrace();
@@ -313,33 +324,6 @@ public class ScheduleActivity extends AppCompatActivity {
 
         return decrementValue;
     }
-/*
-    private void updateScheduleTextView(String userID, int cYear, int cMonth, int cDay) {
-        String fname = generateFileName(userID, cYear, cMonth, cDay);
-
-        try {
-            FileInputStream fis = openFileInput(fname);
-            byte[] fileData = new byte[fis.available()];
-            fis.read(fileData);
-            fis.close();
-
-            String existingSchedules = new String(fileData);
-            String[] schedulesArray = existingSchedules.split("\n");
-
-            StringBuilder formattedSchedules = new StringBuilder();
-
-            //0번째 라인 출력하는 코드
-            formattedSchedules.append("1. ").append(schedulesArray[0]).append("\n");
-            for (int i = 1; i < schedulesArray.length; i += 2) {
-                formattedSchedules.append((i + 1) / 2).append(". ").append(schedulesArray[i]).append("\n");
-            }
-
-            textView2Schedule.setText(formattedSchedules.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    */
 @SuppressLint("ResourceType")
 private void updateScheduleTextView(String userID, int cYear, int cMonth, int cDay) {
     // 파일 이름 생성
