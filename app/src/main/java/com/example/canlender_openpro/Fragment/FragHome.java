@@ -1,7 +1,10 @@
 package com.example.canlender_openpro.Fragment;
 
+import static android.content.Intent.getIntent;
+
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,30 +29,43 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class FragHome extends Fragment {
 
+    public int level=6;
+    public int lastlevel=6;
     private TextView dateTextView;
+    private ImageView characterImageView;
     private Handler handler;
     private SimpleDateFormat dateFormat;
     private View view;
     private String TAG = "프래그먼트";
-
+    private String userID=null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
         view = inflater.inflate(R.layout.frag_home, container, false);
 
+        Intent intent = requireActivity().getIntent();
+        userID = intent.getStringExtra("UserEmail");
         // 날짜 초기화
         dateTextView = view.findViewById(R.id.textView);
+        characterImageView = view.findViewById(R.id.characterImageView);
         handler = new Handler(Looper.getMainLooper());
         dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault());
 
@@ -66,12 +82,118 @@ public class FragHome extends Fragment {
         WeatherDataDownloader downloader = new WeatherDataDownloader();
         downloader.execute();
 
+        readLevelFromFile(userID);
+        setlevel(level);
+        // 리소스 이름을 설정
+        String resourceName = "lev_" + lastlevel + "char";
+
+
+
+        // 리소스 이름을 사용하여 이미지를 설정
+        int resourceId = getResources().getIdentifier(resourceName, "drawable", getActivity().getPackageName());
+        characterImageView.setImageResource(resourceId);
+
+
         return view;
+    }
+    public void setlevel(int level){
+        if (level<2){
+            lastlevel=1;
+        } else if (level>=2&&level<4) {
+            lastlevel=2;
+        }
+        else if (level>=4&&level<6) {
+            lastlevel=3;
+        }
+        else if (level>=6&&level<8) {
+            lastlevel=4;
+        }
+        else if (level>=8&&level<10) {
+            lastlevel=5;
+        }
+        else {
+            lastlevel=6;
+        }
+    }
+    public void readLevelFromFile(String name) {
+        String fname = addexp(name);
+
+        // 파일을 처리하는 메서드 호출
+        int level = processFileForLevel(fname);
+
+        // 읽어온 레벨 값을 사용할 수 있습니다.
+        // 예를 들어, 이제 level 변수에 파일에서 읽어온 레벨 값이 들어 있습니다.
+    }
+
+    private int processFileForLevel(String fileName) {
+
+        try {
+            // 파일이 존재하지 않으면 생성
+            File file = new File(getActivity().getFilesDir(), fileName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            // 파일을 읽고 쓰기 위해 BufferedReader와 FileWriter 대신에 FileInputStream과 FileOutputStream 사용
+            FileInputStream fis = new FileInputStream(file);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader reader = new BufferedReader(isr);
+
+            // 임시 파일 생성
+            FileOutputStream fos = new FileOutputStream(new File(getActivity().getFilesDir(), fileName + "_temp"));
+
+            // 맨 첫 줄 읽기
+            String firstLine = reader.readLine();
+
+            if (firstLine != null) {
+                // 파일이 비어있지 않으면 정수로 변환 후 1을 더함
+                level = Integer.parseInt(firstLine.trim());
+            } else {
+                // 파일이 비어있으면 0으로 초기화
+                level = 0;
+            }
+
+            // 맨 첫 줄에 새로운 값 쓰기
+            fos.write(String.valueOf(level).getBytes());
+
+            // 파일이 비어있을 때만 한 번 줄바꿈 추가
+            if (firstLine == null) {
+                fos.write('\n');
+            }
+
+            // 나머지 파일 내용 복사
+            if (firstLine != null) {
+                fos.write('\n'); // 첫 줄을 이미 처리했으므로 다시 쓰지 않음
+            }
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fos.write((line + "\n").getBytes());
+            }
+
+            // 사용한 리소스 닫기
+            fis.close();
+            fos.close();
+
+            // 임시 파일을 원래 파일로 복사
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Files.move(Paths.get(new File(getActivity().getFilesDir(), fileName + "_temp").getPath()),
+                        Paths.get(file.getPath()), StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException | NumberFormatException e) {
+            // 예외 발생 시 에러 로그 출력
+            e.printStackTrace();
+
+
+                }
+        return level;
+    }
+    public String addexp(String userID){
+        return "" +userID +"exp"+ ".txt";
     }
 
     private void updateCurrentDate() {
         String currentDate = dateFormat.format(new Date());
-        dateTextView.setText("현재 날짜: " + currentDate);
+        dateTextView.setText("현재 날짜: " + currentDate+"\nlevel: " + lastlevel);
 
         // 버튼 클릭 이벤트 처리
         View backgroundButton = view.findViewById(R.id.background_Btn);
