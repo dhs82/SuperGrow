@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Canlender_OpenPro</string>
+    <string name="title">Your Title Here</string>
+    <string name="date">Your Date Here</string> <!-- 추가된 부분 -->
+    <!-- 다른 string 리소스도 필요한 경우 추가 -->
 </resources>

@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.canlender_openpro.BackgroundActivity;
-import com.example.canlender_openpro.MemoActivity;
 import com.example.canlender_openpro.NasaActivity;
 import com.example.canlender_openpro.R;
 
@@ -98,7 +97,7 @@ public class FragHome extends Fragment {
             @Override
             public void onClick(View v) {
                 // BackgroundActivity로 이동하는 Intent 생성
-                Intent intent = new Intent(getActivity(), MemoActivity.class);
+                Intent intent = new Intent(getActivity(), NasaActivity.class);
                 startActivity(intent);
             }
         });
