@@ -124,7 +124,7 @@
         android:fontFamily="@font/wildfont"
         android:text=" 메인화면"
         android:textColor="#F37168"
-        android:textSize="24sp"
+        android:textSize="19sp"
 
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -140,7 +140,7 @@
         android:text=" 일정확인"
         android:fontFamily="@font/wildfont"
         android:textColor="#F39A17"
-        android:textSize="24sp"
+        android:textSize="19sp"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -154,7 +154,7 @@
         android:text=" 지도확인"
         android:fontFamily="@font/wildfont"
         android:textColor="#03A9F4"
-        android:textSize="24sp"
+        android:textSize="19sp"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -168,10 +168,22 @@
         android:text=" 일정 정리"
         android:fontFamily="@font/wildfont"
         android:textColor="#5D72EA"
-        android:textSize="24sp"
+        android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/explore"
+        android:text=" 오늘의 나사"
+        android:fontFamily="@font/wildfont"
+        android:textColor="#B325CC"
+        android:textSize="19sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
         android:id="@+id/background_Btn"
