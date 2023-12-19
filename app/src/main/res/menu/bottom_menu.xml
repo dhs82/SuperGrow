@@ -25,5 +25,11 @@
         android:title="호텔"
         android:enabled="true"
         />
+    <item
+        android:id="@+id/explore"
+        android:icon="@drawable/explore"
+        android:title="탐험"
+        android:enabled="true"
+        />
 
 </menu>
