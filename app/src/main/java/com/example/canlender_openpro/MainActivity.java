@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 
+import com.example.canlender_openpro.Fragment.FragExplore;
 import com.example.canlender_openpro.Fragment.FragFriend;
 import com.example.canlender_openpro.Fragment.FragHome;
 import com.example.canlender_openpro.Fragment.FragHotel;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragment_star;
     Fragment fragment_group;
     Fragment fragment_hotel;
+    Fragment fragment_explore;
 
 
     @Override
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         fragment_star=new FragStar();
         fragment_group=new FragFriend();
         fragment_hotel=new FragHotel();
+        fragment_explore=new FragExplore();
 
         //초기 플래그먼트 설정
         getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_home).commitAllowingStateLoss();
@@ -71,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.hotel) {
                     Log.i(TAG, "hotel 들어옴");
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_hotel).commitAllowingStateLoss();
+                    return true;
+                }
+                else if (itemId == R.id.explore) {
+                    Log.i(TAG, "explore 들어옴");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_explore).commitAllowingStateLoss();
                     return true;
                 }
                 return true;
